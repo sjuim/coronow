@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="theme-color" content="#88d8b0" />
         <title>Coronow</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,15 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" />
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
     </head>
     <style>
         .header {
             width: 100%;
             text-align: center;
-            background: #96ceb4;
+            background: #88d8b0;
             line-height: 45px;
             font-size: 30px;
             font-weight: bold;
@@ -51,32 +55,41 @@
         label[for=country]{
             display: block;
         }
+
+        #country {
+            display: none;
+        }
+        
+        .loading {
+            font-size: 24px;
+        }
     </style>
     <body>
         <div class="header">Coro<span>now</span></div>
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center">
-                    <label for="country">Country</label>
+                    <label for="country"><lang for="country"></lang></label>
+                    <div class="loading"><i class="fas fa-virus fa-spin"></i></div>
                     <select id="country"></select>
                 </div>
             </div>
             <div class="row">
                 <div class="col-6 col-md-3">
-                    <h1>Confirmed</h1>
-                    <div class="main-counter" id="counter_confirmed"></div>
+                    <h1><lang for="confirmed"></lang> <i class="fas fa-clipboard-check"></i></h1>
+                    <div class="main-counter" id="counter_confirmed"><i class="fas fa-virus fa-spin"></i></div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <h1>Deaths</h1>
-                    <div class="main-counter" id="counter_deaths"></div>
+                    <h1><lang for="deaths"></lang> <i class="fas fa-skull"></i></h1>
+                    <div class="main-counter" id="counter_deaths"><i class="fas fa-virus fa-spin"></i></div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <h1>Recovered</h1>
-                    <div class="main-counter" id="counter_recovered"></div>
+                    <h1><lang for="recovered"></lang> <i class="fas fa-shield-virus"></i></h1>
+                    <div class="main-counter" id="counter_recovered"><i class="fas fa-virus fa-spin"></i></div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <h1>Fatality</h1>
-                    <div class="main-counter" id="counter_fatality"></div>
+                    <h1><lang for="fatality"></lang> <i class="fas fa-skull-crossbones"></i></h1>
+                    <div class="main-counter" id="counter_fatality"><i class="fas fa-virus fa-spin"></i></div>
                 </div>
             </div>
         </div>
@@ -94,8 +107,36 @@
             window.location.href = "#" + h;
         }
 
+        function loadLang() {
+            $("lang").each(function () {
+                $(this).html(lang[$(this).attr("for")]);
+            });
+        }
+
         var data = [];
+        var current_lang = navigator.language.split("-")[0];
+        var lang = {};
+        if (current_lang === "pt") {
+            lang = {
+                country: "País",
+                confirmed: "Confirmados",
+                deaths: "Mortes",
+                recovered: "Recuperados",
+                fatality: "Fatalidade"
+            };
+        } else {
+            lang = {
+                country: "Country",
+                confirmed: "Confirmed",
+                deaths: "Deaths",
+                recevered: "Recovered",
+                fatality: "Fatality"
+            };
+        }
+
         $(document).ready(function () {
+            loadLang();
+
             $.ajax({
                 url: "https://pomber.github.io/covid19/timeseries.json",
                 dataType: "json",
@@ -128,7 +169,8 @@
                             }
                         });
                     }
-                    $("select").select2().trigger("change");
+                    $("select").show().select2().trigger("change");
+                    $(".loading").hide();
                 }
             });
 
