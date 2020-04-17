@@ -13,6 +13,10 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" />
     </head>
     <style>
+        .container {
+            padding-top: 10px;
+        }
+
         h1 {
             font-size: 20px;
             text-align: center;
@@ -29,11 +33,15 @@
             font-size: 22px;
             padding: 10px 0px 15px;
         }
+
+        label[for=country]{
+            display: block;
+        }
     </style>
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 text-center">
                     <label for="country">Country</label>
                     <select id="country"></select>
                 </div>
@@ -59,7 +67,18 @@
         </div>
     </body>
     <script>
-        var countries = [];
+        function numberFormat(number) {
+            return new Intl.NumberFormat().format(number);
+        }
+
+        function hash() {
+            return window.location.hash.replace("#", "");
+        }
+
+        function jump(h) {
+            window.location.href = "#" + h;
+        }
+
         var data = [];
         $(document).ready(function () {
             $.ajax({
@@ -67,11 +86,34 @@
                 dataType: "json",
                 success: function (d) {
                     data = d;
+                    var world = [];
+                    $("#country").append('<option value="world">World</option>');
                     $(Object.keys(data)).each(function (a, b) {
-                        countries.push(b);
                         $("#country").append('<option value="' + b + '">' + b + '</option>');
+                        $(data[b]).each(function (c, d) {
+                            var found = false;
+                            $(world).each(function (e, f) {
+                                if (f.date === d.date) {
+                                    world[e].confirmed += d.confirmed;
+                                    world[e].deaths += d.deaths;
+                                    world[e].recovered += d.recovered;
+                                    found = true;
+                                }
+                            });
+                            if (!found) {
+                                world.push({date: d.date, confirmed: d.confirmed, deaths: d.deaths, recovered: d.recovered});
+                            }
+                        });
                     });
-                    $("select").select2();
+                    data.world = world;
+                    if (hash().length > 0) {
+                        $("#country option").each(function () {
+                            if ($(this).attr("value").toLowerCase() === hash().toLowerCase()) {
+                                $(this).prop("selected", true);
+                            }
+                        });
+                    }
+                    $("select").select2().trigger("change");
                 }
             });
 
@@ -79,10 +121,11 @@
                 var country = $(this).select2("val");
                 var d = data[country];
                 var last = d[d.length - 1];
-                $("#counter_confirmed").html(last.confirmed);
-                $("#counter_deaths").html(last.deaths);
-                $("#counter_recovered").html(last.recovered);
-                $("#counter_fatality").html((last.deaths / (last.confirmed) * 100).toFixed(1) + "%");
+                $("#counter_confirmed").html(numberFormat(last.confirmed));
+                $("#counter_deaths").html(numberFormat(last.deaths));
+                $("#counter_recovered").html(numberFormat(last.recovered));
+                $("#counter_fatality").html(numberFormat((last.deaths / (last.confirmed) * 100).toFixed(1)) + "%");
+                jump(country);
             });
         });
     </script>
