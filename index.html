@@ -59,9 +59,14 @@
         #country {
             display: none;
         }
-        
+
         .loading {
             font-size: 24px;
+        }
+
+        .chart-wrapper {
+            border: 1px solid #ffcc5e;
+            border-top: none;
         }
     </style>
     <body>
@@ -92,6 +97,14 @@
                     <div class="main-counter" id="counter_fatality"><i class="fas fa-virus fa-spin"></i></div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-12">
+                    <h1><lang for="overall_growth"></lang></h1>
+                    <div id="wrapper-chart" class="chart-wrapper">
+
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
     <script>
@@ -113,6 +126,56 @@
             });
         }
 
+        function valuesOfKey(list, key) {
+            var filtered = [];
+            $(list).each(function (a, b) {
+                filtered.push(b[key]);
+            });
+            return filtered;
+        }
+
+        function buildCharts() {
+            var country = $("#country").select2("val");
+            var c_data = data[country];
+            var wrapper = $("#wrapper-chart");
+            wrapper.html("<canvas height='200'></canvas>");
+            new Chart(wrapper.find("canvas")[0], {
+                type: "line",
+                data: {
+                    labels: valuesOfKey(c_data, "date"),
+                    datasets: [
+                        {
+                            label: lang.confirmed,
+                            data: valuesOfKey(c_data, "confirmed"),
+                            fill: false,
+                            borderColor: "#ffcc5c",
+                            lineTension: 0,
+                            pointRadius: 1
+                        },
+                        {
+                            label: lang.deaths,
+                            data: valuesOfKey(c_data, "deaths"),
+                            fill: true,
+                            borderColor: "#ff6f69",
+                            backgroundColor: "rgba(255, 0, 0, 0.3)",
+                            lineTension: 0,
+                            pointRadius: 1
+                        },
+                        {
+                            label: lang.recovered,
+                            data: valuesOfKey(c_data, "recovered"),
+                            fill: false,
+                            borderColor: "#96ceb4",
+                            lineTension: 0,
+                            pointRadius: 0,
+                            borderDash: [5, 10]
+                        }
+                    ]
+                },
+                options: {}
+            });
+        }
+
         var data = [];
         var current_lang = navigator.language.split("-")[0];
         var lang = {};
@@ -122,7 +185,9 @@
                 confirmed: "Confirmados",
                 deaths: "Mortes",
                 recovered: "Recuperados",
-                fatality: "Fatalidade"
+                fatality: "Fatalidade",
+                all_world: "Mundo Todo",
+                overall_growth: "Crescimento geral"
             };
         } else {
             lang = {
@@ -130,7 +195,9 @@
                 confirmed: "Confirmed",
                 deaths: "Deaths",
                 recevered: "Recovered",
-                fatality: "Fatality"
+                fatality: "Fatality",
+                all_world: "All World",
+                overall_growth: "Overall growth"
             };
         }
 
@@ -143,7 +210,7 @@
                 success: function (d) {
                     data = d;
                     var world = [];
-                    $("#country").append('<option value="world">World</option>');
+                    $("#country").append('<option value="world">' + lang.all_world + '</option>');
                     $(Object.keys(data)).each(function (a, b) {
                         $("#country").append('<option value="' + b + '">' + b + '</option>');
                         $(data[b]).each(function (c, d) {
@@ -183,6 +250,7 @@
                 $("#counter_recovered").html(numberFormat(last.recovered));
                 $("#counter_fatality").html(numberFormat((last.deaths / (last.confirmed) * 100).toFixed(1)) + "%");
                 jump(country);
+                buildCharts();
             });
         });
     </script>
