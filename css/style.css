@@ -1,0 +1,90 @@
+.header {
+    width: 100%;
+    text-align: center;
+    background: #88d8b0;
+    line-height: 45px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.header span {
+    font-style: italic;
+    color: #ff6f69;
+}
+
+.container {
+    padding-top: 10px;
+}
+
+h1 {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 20px;
+    background: #ffcc5c;
+    margin-bottom: 0;
+    padding: 4px 0px;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.main-counter {
+    background: #ffeead;
+    text-align: center;
+    font-size: 22px;
+    padding: 10px 0px 15px;
+}
+
+label[for=country]{
+    display: block;
+}
+
+#country {
+    display: none;
+}
+
+.loading {
+    font-size: 24px;
+    text-align: center;
+}
+
+.chart-wrapper {
+    border: 1px solid #ffcc5e;
+    border-top: none;
+}
+
+img.flag {
+    width: 40px;
+    float: left;
+    margin: 5px 0px 5px 9px;
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+img.flag.active {
+    opacity: 1;
+    filter: none;
+}
+
+.flags {
+    background: #ffeead;
+}
+
+.clear {
+    clear: both;
+}
+
+h2 {
+    text-align: center;
+    font-size: 18px;
+    background: #ffcc5c;
+    padding: 3px 0px;
+}
+
+#footer {
+    font-size: 12px;
+    text-align: center;
+    margin: 0px 0px 12px 0px;
+}
+
+#footer .fa-heart {
+    color: red;
+}
