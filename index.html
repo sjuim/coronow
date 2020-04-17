@@ -134,6 +134,22 @@
             return filtered;
         }
 
+        function beautifyDate(date) {
+            date = date.split("-");
+            if (current_lang === "pt") {
+                return date[2] + "/" + lang.months[date[1] - 1];
+            } else {
+                return lang.months[date[1] - 1] + " " + date[2];
+            }
+        }
+
+        function beautifyDates(dates) {
+            $(dates).each(function (a, b) {
+                dates[a] = beautifyDate(b);
+            });
+            return dates;
+        }
+
         function buildCharts() {
             var country = $("#country").select2("val");
             var c_data = data[country];
@@ -142,7 +158,7 @@
             new Chart(wrapper.find("canvas")[0], {
                 type: "line",
                 data: {
-                    labels: valuesOfKey(c_data, "date"),
+                    labels: beautifyDates(valuesOfKey(c_data, "date")),
                     datasets: [
                         {
                             label: lang.confirmed,
@@ -187,7 +203,8 @@
                 recovered: "Recuperados",
                 fatality: "Fatalidade",
                 all_world: "Mundo Todo",
-                overall_growth: "Crescimento geral"
+                overall_growth: "Crescimento geral",
+                months: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
             };
         } else {
             lang = {
@@ -197,7 +214,8 @@
                 recevered: "Recovered",
                 fatality: "Fatality",
                 all_world: "All World",
-                overall_growth: "Overall growth"
+                overall_growth: "Overall growth",
+                months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
             };
         }
 
