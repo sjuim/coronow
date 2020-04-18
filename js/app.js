@@ -259,7 +259,7 @@ $(document).ready(function () {
                 });
             }
             $("select").show().select2().trigger("change");
-            $(".loading").hide();
+            $(".loading").not(".dontgo").hide();
 
             $("#slider-map, #slider-counters").attr("data-slider-max", data.world.length - 1).attr("data-slider-value", data.world.length - 1);
             $("#slider-map, #slider-counters").slider();
