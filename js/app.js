@@ -139,7 +139,48 @@ function buildChartCompare() {
     });
 }
 
-var data = [];
+var chart = null;
+function buildMapChart(i) {
+    if (data === false) {
+        setTimeout(function () {
+            buildMapChart();
+        }, 500);
+        return;
+    }
+    i = i === undefined ? data.world.length - 1 : i;
+    var attribute = $("#map-buttons-world-map .btn-warning").attr("attribute");
+    var cdata = [['Country', 'Deaths']];
+    $(Object.keys(data)).each(function (a, b) {
+        if (b !== "world") {
+            cdata.push([b, data[b][i][attribute]]);
+        }
+    });
+    $("#slider-map-date").html(beautifyDate(data.world[i].date));
+
+    var colors = ['#fff9f9', '#ffc9c9', '#ffa9a9', '#ff8989', '#ff6f69'];
+    if (attribute === "confirmed") {
+        colors = ["#F8F8F8", "#ffcc5c"];
+    } else if (attribute === "recovered") {
+        colors = ["#F8F8F8", "#88d8b0"];
+    }
+
+    var gdata = google.visualization.arrayToDataTable(cdata);
+
+    var options = {
+        colorAxis: {
+            colors: colors
+        }
+    };
+
+    $("#wrapper-map").html("");
+    if (chart === null) {
+        chart = new google.visualization.GeoChart($("#wrapper-map")[0]);
+    }
+    chart.clearChart();
+    chart.draw(gdata, options);
+}
+
+var data = false;
 var current_lang = navigator.language.split("-")[0];
 var lang = {};
 if (current_lang === "pt") {
@@ -153,7 +194,8 @@ if (current_lang === "pt") {
         overall_growth: "Crescimento geral",
         months: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
         comparing_countries: "Comparar países",
-        footer: "Feito por <a href='https://github.com/etcho'>Etcho</a> para a <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://github.com/pomber/covid19' target='_blank'>Fonte de dados</a>."
+        footer: "Feito por <a href='https://github.com/etcho'>Etcho</a> para a <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://github.com/pomber/covid19' target='_blank'>Fonte de dados</a>.",
+        world_map: "Mapa do Mundo"
     };
 } else {
     lang = {
@@ -166,7 +208,8 @@ if (current_lang === "pt") {
         overall_growth: "Overall growth",
         months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         comparing_countries: "Compare countries",
-        footer: "Made by <a href='https://github.com/etcho'>Etcho</a> for <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://github.com/pomber/covid19' target='_blank'>Data source</a>."
+        footer: "Made by <a href='https://github.com/etcho'>Etcho</a> for <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://github.com/pomber/covid19' target='_blank'>Data source</a>.",
+        world_map: "World Map"
     };
 }
 
@@ -207,6 +250,12 @@ $(document).ready(function () {
             }
             $("select").show().select2().trigger("change");
             $(".loading").hide();
+
+            $("#slider-map").attr("data-slider-max", data.world.length - 1).attr("data-slider-value", data.world.length - 1);
+            $("#slider-map").slider();
+            $("#slider-map").on("change", function (slideEvt) {
+                buildMapChart(slideEvt.value.newValue);
+            });
         }
     });
 
@@ -229,4 +278,17 @@ $(document).ready(function () {
             buildChartCompare();
         }
     });
+
+    $("#map-buttons-world-map .btn").on("click", function () {
+        $("#map-buttons-world-map .btn").removeClass("btn-warning").addClass("btn-secondary");
+        $(this).addClass("btn-warning");
+        buildMapChart($("#slider-map").val());
+    });
+
+    google.charts.load('current', {
+        'packages': ['geochart'],
+        'mapsApiKey': 'AIzaSyD4quPRnwLcqC9R6iaHl4ffAGJeAybt7Yg'
+    });
+
+    google.charts.setOnLoadCallback(buildMapChart);
 });

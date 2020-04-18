@@ -5,6 +5,7 @@
         <title>Coronow</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.0.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -28,6 +29,8 @@
             gtag('config', 'UA-29842207-15');
         </script>
 
+        <link rel="stylesheet" href="css/bootstrap-slider.css" />
+        <script src="js/bootstrap-slider.js"></script>
     </head>
     <body>
         <div class="header">Coro<span>now</span></div>
@@ -55,6 +58,26 @@
                 <div class="col-6 col-md-3">
                     <h1><lang for="fatality"></lang> <i class="fas fa-skull-crossbones"></i></h1>
                     <div class="main-counter" id="counter_fatality"><i class="fas fa-virus fa-spin"></i></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <h1><lang for="world_map"></lang></h1>
+                    <div class="map-controller" id="map-buttons-world-map">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-secondary" attribute="confirmed"><i class="fas fa-clipboard-check"></i></button>
+                            <button type="button" class="btn btn-warning" attribute="deaths"><i class="fas fa-skull"></i></button>
+                            <button type="button" class="btn btn-secondary" attribute="recovered"><i class="fas fa-shield-virus"></i></button>
+                        </div>
+                    </div>
+                    <div class="map-controller" style="margin-top: -32px;">
+                        <label id="slider-map-date"></label>
+                        <input id="slider-map" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="0"/>
+                    </div>
+                    <div id="wrapper-map" class="chart-wrapper">
+                        <div class="loading"><i class="fas fa-virus fa-spin"></i></div>
+                    </div>
                 </div>
             </div>
 
