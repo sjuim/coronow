@@ -184,10 +184,16 @@ function buildMapChart(i) {
 function updateCounters(country, i) {
     var d = data[country];
     i = i === undefined ? d.length - 1 : i;
-    $("#counter_confirmed").html(numberFormat(d[i].confirmed));
-    $("#counter_deaths").html(numberFormat(d[i].deaths));
-    $("#counter_recovered").html(numberFormat(d[i].recovered));
-    $("#counter_fatality").html(numberFormat((d[i].deaths / (d[i].confirmed) * 100).toFixed(1)) + "%");
+    if (i > 0) {
+        $("#counter_confirmed").html(numberFormat(d[i].confirmed) + '<div class="counter_change' + (d[i].confirmed - d[i - 1].confirmed > 0 ? ' going-up"><i class="fas fa-caret-up"></i> ' : ' going-down"><i class="fas fa-caret-down"></i> ') + (numberFormat(d[i].confirmed - d[i - 1].confirmed)) + '</div>');
+        $("#counter_deaths").html(numberFormat(d[i].deaths) + '<div class="counter_change' + (d[i].deaths - d[i - 1].deaths > 0 ? ' going-up"><i class="fas fa-caret-up"></i> ' : ' going-down"><i class="fas fa-caret-down"></i> ') + (numberFormat(d[i].deaths - d[i - 1].deaths)) + '</div>');
+        $("#counter_recovered").html(numberFormat(d[i].recovered) + '<div class="counter_change' + (d[i].recovered - d[i - 1].recovered >= 0 ? ' going-down"><i class="fas fa-caret-up"></i> ' : ' going-up"><i class="fas fa-caret-down"></i> ') + (numberFormat(d[i].recovered - d[i - 1].recovered)) + '</div>');
+    } else {
+        $("#counter_confirmed").html(numberFormat(d[i].confirmed));
+        $("#counter_deaths").html(numberFormat(d[i].deaths));
+        $("#counter_recovered").html(numberFormat(d[i].recovered));
+    }
+    $("#counter_fatality").html(numberFormat(((isNaN(d[i].deaths / (d[i].confirmed) * 100) ? 0 : d[i].deaths / (d[i].confirmed) * 100)).toFixed(1)) + "%");
     $("#slider-counters-date").html(beautifyDate(data.world[i].date));
 }
 
@@ -206,7 +212,7 @@ if (current_lang === "pt") {
         months: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
         comparing_countries: "Comparar países",
         footer: "Feito por <a href='https://github.com/etcho'>Etcho</a> para a <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://github.com/pomber/covid19' target='_blank'>Fonte de dados</a>.",
-        world_map: "Mapa do Mundo"
+        world_map: "Mapa do Mundo",
     };
 } else {
     lang = {
@@ -220,7 +226,7 @@ if (current_lang === "pt") {
         months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         comparing_countries: "Compare countries",
         footer: "Made by <a href='https://github.com/etcho'>Etcho</a> for <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://github.com/pomber/covid19' target='_blank'>Data source</a>.",
-        world_map: "World Map"
+        world_map: "World Map",
     };
 }
 

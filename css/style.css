@@ -31,6 +31,7 @@ h1 {
     text-align: center;
     font-size: 22px;
     padding: 10px 0px 15px;
+    font-weight: bold;
 }
 
 label[for=country]{
@@ -121,4 +122,19 @@ h2 {
     width: 50px;
     font-size: 22px;
     padding: 0px 0px 1px 0px;
+}
+
+.counter_change {
+    font-size: 12px;
+    margin-top: -6px;
+    margin-bottom: -12px;
+    font-weight: normal;
+}
+
+.counter_change.going-up {
+    color: red;
+}
+
+.counter_change.going-down {
+    color: green;
 }
