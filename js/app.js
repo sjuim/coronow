@@ -169,7 +169,8 @@ function buildMapChart(i) {
     var options = {
         colorAxis: {
             colors: colors
-        }
+        },
+        height: $("#wrapper-map").width() * 0.583
     };
 
     $("#wrapper-map").html("");
