@@ -180,6 +180,16 @@ function buildMapChart(i) {
     chart.draw(gdata, options);
 }
 
+function updateCounters(country, i) {
+    var d = data[country];
+    i = i === undefined ? d.length - 1 : i;
+    $("#counter_confirmed").html(numberFormat(d[i].confirmed));
+    $("#counter_deaths").html(numberFormat(d[i].deaths));
+    $("#counter_recovered").html(numberFormat(d[i].recovered));
+    $("#counter_fatality").html(numberFormat((d[i].deaths / (d[i].confirmed) * 100).toFixed(1)) + "%");
+    $("#slider-counters-date").html(beautifyDate(data.world[i].date));
+}
+
 var data = false;
 var current_lang = navigator.language.split("-")[0];
 var lang = {};
@@ -251,22 +261,20 @@ $(document).ready(function () {
             $("select").show().select2().trigger("change");
             $(".loading").hide();
 
-            $("#slider-map").attr("data-slider-max", data.world.length - 1).attr("data-slider-value", data.world.length - 1);
-            $("#slider-map").slider();
+            $("#slider-map, #slider-counters").attr("data-slider-max", data.world.length - 1).attr("data-slider-value", data.world.length - 1);
+            $("#slider-map, #slider-counters").slider();
             $("#slider-map").on("change", function (slideEvt) {
                 buildMapChart(slideEvt.value.newValue);
+            });
+            $("#slider-counters").on("change", function (slideEvt) {
+                updateCounters($("#country").select2("val"), slideEvt.value.newValue);
             });
         }
     });
 
     $("#country").on("change", function () {
         var country = $(this).select2("val");
-        var d = data[country];
-        var last = d[d.length - 1];
-        $("#counter_confirmed").html(numberFormat(last.confirmed));
-        $("#counter_deaths").html(numberFormat(last.deaths));
-        $("#counter_recovered").html(numberFormat(last.recovered));
-        $("#counter_fatality").html(numberFormat((last.deaths / (last.confirmed) * 100).toFixed(1)) + "%");
+        updateCounters(country);
         jump(country);
         buildCharts();
         buildChartCompare();

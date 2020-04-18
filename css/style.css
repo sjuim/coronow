@@ -101,11 +101,11 @@ h2 {
     width: 95% !important;
 }
 
-#slider-map {
+#slider-map, #slider-counters {
     display: none;
 }
 
-#slider-map-date {
+#slider-map-date, #slider-counters-date {
     padding: 2px 8px;
     margin-bottom: 0px;
     background: #EEE;
