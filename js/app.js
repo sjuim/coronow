@@ -238,7 +238,7 @@ if (current_lang === "pt") {
         overall_growth: "Overall growth",
         months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         comparing_counties: "Compare counties",
-        footer: "Adapted by <a href='https://github.com/sjuim'>Shreya Majumdar</a> from code made by <a href='https://github.com/etcho'>Etcho</a> for <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://sjuim.github.io/covid19-mass-data/docs/timeseries.json' target='_blank'>Data source for my project</a>, adapted from information published by <a href='https://github.com/nytimes/covid-19-data'>NY Times</a>.",
+        footer: "Adapted by <a href='https://github.com/sjuim'>Shreya Majumdar</a> from code made by <a href='https://github.com/etcho'>Etcho</a> for <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://sjuim.github.io/covid19-mass-data/timeseries.json' target='_blank'>Data source for my project</a>, adapted from information published by <a href='https://github.com/nytimes/covid-19-data'>NY Times</a>.",
         world_map: "World Map",
     };
 }
@@ -247,7 +247,7 @@ $(document).ready(function () {
     loadLang();
 
     $.ajax({
-        url: "https://sjuim.github.io/covid19-mass-data/docs/timeseries.json",
+        url: "https://sjuim.github.io/covid19-mass-data/timeseries.json",
         dataType: "json",
         success: function (d) {
             data = d;
