@@ -48,7 +48,7 @@ function colorForCounty(county) {
     } else if (county === "Middlesex") {
         return "#0dac12";
     } else if (county === "Berkshire") {
-        return "#a7b01f";
+        return "#ff6400";
     } else if (county === "Worcester") {
         return "#ffa500";
     } else if (county === "Essex") {
@@ -62,11 +62,11 @@ function colorForCounty(county) {
     } else if (county === "Plymouth") {
         return "#b44c78";
     } else if (county === "Franklin") {
-        return "#d4bcef";
+        return "#93ff00";
     } else if (county === "Hampshire") {
-        return "#0dac12";
+        return "#f3ff00";
     } else if (county === "Nantucket") {
-        return "#efddbc";
+        return "#ff008f";
     } else if (county === "Dukes") {
         return "#758a7d";
     } else {                    // For Unknown county
