@@ -60,15 +60,15 @@ function colorForCounty(county) {
     } else if (county === "Hampden") {
         return "#ff00d4";
     } else if (county === "Plymouth") {
-        return "#0572f8";
+        return "#b44c78";
     } else if (county === "Franklin") {
-        return "#f80505";
+        return "#d4bcef";
     } else if (county === "Hampshire") {
         return "#0dac12";
     } else if (county === "Nantucket") {
-        return "#a7b01f";
+        return "#efddbc";
     } else if (county === "Dukes") {
-        return "#ffa500";
+        return "#758a7d";
     } else {                    // For Unknown county
         return "#000000";
     }
