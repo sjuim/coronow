@@ -40,31 +40,43 @@ function beautifyDates(dates) {
     return dates;
 }
 
-function colorForCountry(country) {
-    if (country === "US") {
+function colorForCounty(county) {
+    if (county === "Suffolk") {
         return "#0572f8";
-    } else if (country === "China") {
+    } else if (county === "Norfolk") {
         return "#f80505";
-    } else if (country === "Brazil") {
+    } else if (county === "Middlesex") {
         return "#0dac12";
-    } else if (country === "Italy") {
+    } else if (county === "Berkshire") {
         return "#a7b01f";
-    } else if (country === "Spain") {
+    } else if (county === "Worcester") {
         return "#ffa500";
-    } else if (country === "France") {
+    } else if (county === "Essex") {
         return "#00d0ff";
-    } else if (country === "Germany") {
+    } else if (county === "Barnstable") {
         return "#8d0000";
-    } else if (country === "United Kingdom") {
+    } else if (county === "Bristol") {
         return "#7900ff";
-    } else if (country === "Japan") {
+    } else if (county === "Hampden") {
         return "#ff00d4";
+    } else if (county === "Plymouth") {
+        return "#0572f8";
+    } else if (county === "Franklin") {
+        return "#f80505";
+    } else if (county === "Hampshire") {
+        return "#0dac12";
+    } else if (county === "Nantucket") {
+        return "#a7b01f";
+    } else if (county === "Dukes") {
+        return "#ffa500";
+    } else {                    // For Unknown county
+        return "#000000";
     }
 }
 
 function buildCharts() {
-    var country = $("#country").select2("val");
-    var c_data = data[country];
+    var county = $("#county").select2("val");
+    var c_data = data[county];
     var wrapper = $("#wrapper-chart");
     wrapper.html("<canvas height='200'></canvas>");
     new Chart(wrapper.find("canvas")[0], {
@@ -126,13 +138,13 @@ function buildChartCompare() {
                 lineTension: 0,
                 pointRadius: 1,
                 borderWidth: 2,
-                borderColor: colorForCountry(val)
+                borderColor: colorForCounty(val)
             });
         });
         new Chart(wrapper.find("canvas")[0], {
             type: "line",
             data: {
-                labels: beautifyDates(valuesOfKey(data.world, "date")),
+                labels: beautifyDates(valuesOfKey(data.statewide, "date")),
                 datasets: datasets
             }
         });
@@ -147,15 +159,15 @@ function buildMapChart(i) {
         }, 500);
         return;
     }
-    i = i === undefined ? data.world.length - 1 : i;
+    i = i === undefined ? data.statewide.length - 1 : i;
     var attribute = $("#map-buttons-world-map .btn-warning").attr("attribute");
-    var cdata = [['Country', 'Deaths']];
+    var cdata = [['County', 'Deaths']];
     $(Object.keys(data)).each(function (a, b) {
-        if (b !== "world") {
+        if (b !== "statewide") {
             cdata.push([b, data[b][i][attribute]]);
         }
     });
-    $("#slider-map-date").html(beautifyDate(data.world[i].date));
+    $("#slider-map-date").html(beautifyDate(data.statewide[i].date));
 
     var colors = ['#fff9f9', '#ffc9c9', '#ffa9a9', '#ff8989', '#ff6f69'];
     if (attribute === "confirmed") {
@@ -181,8 +193,8 @@ function buildMapChart(i) {
     chart.draw(gdata, options);
 }
 
-function updateCounters(country, i) {
-    var d = data[country];
+function updateCounters(county, i) {
+    var d = data[county];
     i = i === undefined ? d.length - 1 : i;
     if (i > 0) {
         $("#counter_confirmed").html(numberFormat(d[i].confirmed) + '<div class="counter_change' + (d[i].confirmed - d[i - 1].confirmed > 0 ? ' going-up"><i class="fas fa-caret-up"></i> ' : ' going-down"><i class="fas fa-caret-down"></i> ') + (numberFormat(d[i].confirmed - d[i - 1].confirmed)) + '</div>');
@@ -194,7 +206,7 @@ function updateCounters(country, i) {
         $("#counter_recovered").html(numberFormat(d[i].recovered));
     }
     $("#counter_fatality").html(numberFormat(((isNaN(d[i].deaths / (d[i].confirmed) * 100) ? 0 : d[i].deaths / (d[i].confirmed) * 100)).toFixed(1)) + "%");
-    $("#slider-counters-date").html(beautifyDate(data.world[i].date));
+    $("#slider-counters-date").html(beautifyDate(data.statewide[i].date));
 }
 
 var data = false;
@@ -207,10 +219,11 @@ if (current_lang === "pt") {
         deaths: "Mortes",
         recovered: "Recuperados",
         fatality: "Fatalidade",
-        all_world: "Mundo Todo",
+        all_state: "Em Todo o Estado",
         overall_growth: "Crescimento geral",
         months: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-        comparing_countries: "Comparar países",
+        comparing_counties: "Comparar países",
+        //This footer I have not bothered updating
         footer: "Feito por <a href='https://github.com/etcho'>Etcho</a> para a <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://github.com/pomber/covid19' target='_blank'>Fonte de dados</a>.",
         world_map: "Mapa do Mundo",
     };
@@ -221,11 +234,11 @@ if (current_lang === "pt") {
         deaths: "Deaths",
         recevered: "Recovered",
         fatality: "Fatality",
-        all_world: "All World",
+        all_state: "Statewide",
         overall_growth: "Overall growth",
         months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        comparing_countries: "Compare countries",
-        footer: "Made by <a href='https://github.com/etcho'>Etcho</a> for <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://github.com/pomber/covid19' target='_blank'>Data source</a>.",
+        comparing_counties: "Compare counties",
+        footer: "Adapted by <a href='https://github.com/sjuim'>Shreya Majumdar</a> from code made by <a href='https://github.com/etcho'>Etcho</a> for <a href='https://github.com/lu-brito'>Lu</a> <i class='fas fa-heart'></i>. <a href='https://sjuim.github.io/covid19-mass-data/docs/timeseries.json' target='_blank'>Data source for my project</a>, adapted from information published by <a href='https://github.com/nytimes/covid-19-data'>NY Times</a>.",
         world_map: "World Map",
     };
 }
@@ -234,32 +247,32 @@ $(document).ready(function () {
     loadLang();
 
     $.ajax({
-        url: "https://pomber.github.io/covid19/timeseries.json",
+        url: "https://sjuim.github.io/covid19-mass-data/docs/timeseries.json",
         dataType: "json",
         success: function (d) {
             data = d;
-            var world = [];
-            $("#country").append('<option value="world">' + lang.all_world + '</option>');
+            var statewide = [];
+            $("#county").append('<option value="statewide">' + lang.all_state + '</option>');
             $(Object.keys(data)).each(function (a, b) {
-                $("#country").append('<option value="' + b + '">' + b + '</option>');
+                $("#county").append('<option value="' + b + '">' + b + '</option>');
                 $(data[b]).each(function (c, d) {
                     var found = false;
-                    $(world).each(function (e, f) {
+                    $(statewide).each(function (e, f) {
                         if (f.date === d.date) {
-                            world[e].confirmed += d.confirmed;
-                            world[e].deaths += d.deaths;
-                            world[e].recovered += d.recovered;
+                            statewide[e].confirmed += d.confirmed;
+                            statewide[e].deaths += d.deaths;
+                            statewide[e].recovered += d.recovered;
                             found = true;
                         }
                     });
                     if (!found) {
-                        world.push({date: d.date, confirmed: d.confirmed, deaths: d.deaths, recovered: d.recovered});
+                        statewide.push({date: d.date, confirmed: d.confirmed, deaths: d.deaths, recovered: d.recovered});
                     }
                 });
             });
-            data.world = world;
+            data.statewide = statewide;
             if (hash().length > 0) {
-                $("#country option").each(function () {
+                $("#county option").each(function () {
                     if ($(this).attr("value").toLowerCase() === hash().toLowerCase()) {
                         $(this).prop("selected", true);
                     }
@@ -268,21 +281,21 @@ $(document).ready(function () {
             $("select").show().select2().trigger("change");
             $(".loading").not(".dontgo").hide();
 
-            $("#slider-map, #slider-counters").attr("data-slider-max", data.world.length - 1).attr("data-slider-value", data.world.length - 1);
+            $("#slider-map, #slider-counters").attr("data-slider-max", data.statewide.length - 1).attr("data-slider-value", data.statewide.length - 1);
             $("#slider-map, #slider-counters").slider();
             $("#slider-map").on("change", function (slideEvt) {
                 buildMapChart(slideEvt.value.newValue);
             });
             $("#slider-counters").on("change", function (slideEvt) {
-                updateCounters($("#country").select2("val"), slideEvt.value.newValue);
+                updateCounters($("#county").select2("val"), slideEvt.value.newValue);
             });
         }
     });
 
-    $("#country").on("change", function () {
-        var country = $(this).select2("val");
-        updateCounters(country);
-        jump(country);
+    $("#county").on("change", function () {
+        var county = $(this).select2("val");
+        updateCounters(county);
+        jump(county);
         buildCharts();
         buildChartCompare();
     });
